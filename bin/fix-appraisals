@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+root="$(realpath "$(dirname $0)/..")"
+
+echo $root
+
+for gemfile in $(find "$root/gemfiles" -iname "*.gemfile"); do
+  lockfile="${gemfile}.lock"
+
+  echo "Fixing $gemfile..." >&2
+
+  BUNDLE_GEMFILE="${gemfile}" bundle lock --lockfile="${lockfile}" --add-platform x86_64-linux > /dev/null
+  BUNDLE_GEMFILE="${gemfile}" bundle lock --lockfile="${lockfile}" --add-platform ruby > /dev/null
+done

@@ -1,0 +1,8 @@
+.bundle
+/coverage
+/doc
+/Gemfile.lock
+/pkg
+/spec/examples.txt
+/.yardoc
+/_yardoc/

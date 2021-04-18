@@ -1,0 +1,12 @@
+default: &default
+  server_url: "http://keycloak.example.com/auth"
+  realm_id: Test
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default

@@ -1,0 +1,7 @@
+--embed-mixin KeycloakRack::WithConfig
+--plugin junk
+-m markdown -M redcarpet
+lib/**/*.rb
+-
+README.md
+

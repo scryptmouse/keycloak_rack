@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/keycloak_rack.rb"
+require "pry"
+
+Pry.start
