@@ -5,7 +5,7 @@ require_relative "../token_helper"
 RSpec.shared_context "with mocked keycloak" do
   let(:config_server_url) { "http://keycloak.example.com/auth" }
   let(:config_realm_id) { "Test" }
-  let(:config_allow_unauthenticated_requests) { false }
+  let(:config_allow_anonymous) { false }
   let(:config_halt_on_auth_failure) { true }
   let(:config_cache_ttl) { 86_400 }
   let(:config_skip_paths) { {} }
@@ -14,7 +14,7 @@ RSpec.shared_context "with mocked keycloak" do
       "KEYCLOAK_SERVER_URL" => config_server_url,
       "KEYCLOAK_REALM_ID" => config_realm_id,
       "KEYCLOAK_CACHE_TTL" => config_cache_ttl,
-      "KEYCLOAK_ALLOW_UNAUTHENTICATED_REQUESTS" => config_allow_unauthenticated_requests,
+      "KEYCLOAK_ALLOW_ANONYMOUS" => config_allow_anonymous,
       "KEYCLOAK_HALT_ON_AUTH_FAILURE" => config_halt_on_auth_failure
     }
   end

@@ -53,7 +53,7 @@ class ApplicationController < ActionController::API
       end
 
       m.success do
-        # When allow_unauthenticated_requests is true, or
+        # When allow_anonymous is true, or
         # a URI is skipped because of skip_paths, this
         # case will be reached. Requests from here on
         # out should be considered anonymous and treated

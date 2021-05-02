@@ -30,7 +30,7 @@ RSpec.describe KeycloakRack::Middleware do
 
   context "with an anonymous request" do
     context "when unauthenticated requests are allowed" do
-      let(:config_allow_unauthenticated_requests) { true }
+      let(:config_allow_anonymous) { true }
 
       it "works" do
         get ?/

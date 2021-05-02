@@ -21,7 +21,7 @@ module KeycloakRack
 
       return Success(found_token) if found_token.present?
 
-      return Success(nil) if config.allow_unauthenticated_requests?
+      return Success(nil) if config.allow_anonymous?
 
       Failure[:no_token, "No JWT provided"]
     end

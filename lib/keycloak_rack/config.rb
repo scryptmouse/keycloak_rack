@@ -51,9 +51,9 @@ module KeycloakRack
     # @return [Boolean]
     attr_config halt_on_auth_failure: true
 
-    # @!attribute [rw] allow_unauthenticated_requests
+    # @!attribute [rw] allow_anonymous
     # @return [Boolean]
-    attr_config allow_unauthenticated_requests: false
+    attr_config allow_anonymous: false
 
     # required :server_url, :realm_id
 
