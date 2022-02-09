@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "appraisal", "2.4.0"
   spec.add_development_dependency "factory_bot", "~> 6.1.0"
-  spec.add_development_dependency "faker", "2.17.0"
+  spec.add_development_dependency "faker", "2.19.0"
   spec.add_development_dependency "pry", "0.14.1"
   spec.add_development_dependency "rack-test", "1.1.0"
   spec.add_development_dependency "rake", ">= 13", "< 14"
