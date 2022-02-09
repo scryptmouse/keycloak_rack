@@ -65,17 +65,17 @@ module KeycloakRack
     # @!attribute [r] expires_at
     # The `exp` claim
     # @return [Time]
-    attribute :expires_at, Types::Timestamp
+    attribute? :expires_at, Types::Timestamp
 
     # @!attribute [r] issued_at
     # The `iat` claim
     # @return [Time]
-    attribute :issued_at, Types::Timestamp
+    attribute? :issued_at, Types::Timestamp
 
     # @!attribute [r] authorized_at
     # The `auth_time` value from Keycloak.
     # @return [Time]
-    attribute :authorized_at, Types::Timestamp
+    attribute? :authorized_at, Types::Timestamp
 
     # @!attribute [r] jti
     # @return [String]
@@ -93,20 +93,20 @@ module KeycloakRack
     # @!attribute [r] authorized_party
     # The `azp` claim
     # @return [String]
-    attribute :authorized_party, Types::String
+    attribute? :authorized_party, Types::String
 
     # @!attribute [r] nonce
     # Cryptographic nonce for the token
     # @return [String]
-    attribute :nonce, Types::String
+    attribute? :nonce, Types::String
 
     # @!attribute [r] scope
     # @return [String]
-    attribute :scope, Types::String
+    attribute? :scope, Types::String
 
     # @!attribute [r] session_state
     # @return [String]
-    attribute :session_state, Types::String
+    attribute? :session_state, Types::String
 
     # @!attribute [r] locale
     # @return [String, nil]
@@ -114,7 +114,7 @@ module KeycloakRack
 
     # @!attribute [r] allowed_origins
     # @return [<String>]
-    attribute :allowed_origins, Types::StringList
+    attribute? :allowed_origins, Types::StringList
 
     # @!attribute [r] headers
     # The JWT headers, provided for debugging
