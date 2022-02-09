@@ -50,20 +50,18 @@ module KeycloakRack
     include Dry::Monads[:do, :result]
 
     include Import[
-      config: "keycloak-rack.config",
-      key_resolver: "keycloak-rack.key_resolver",
+      decode_and_verify: "keycloak-rack.decode_and_verify",
       read_token: "keycloak-rack.read_token",
-      skip_authentication: "keycloak-rack.skip_authentication"
+      skip_authentication: "keycloak-rack.skip_authentication",
+      wrap: "keycloak-rack.wrap_token",
     ]
-
-    delegate :token_leeway, to: :config
 
     # @param [Hash] env the rack environment
     # @return [Dry::Monads::Success(:authenticated, KeycloakRack::DecodedToken)]
     # @return [Dry::Monads::Success(:skipped, String)]
     # @return [Dry::Monads::Success(:unauthenticated)]
     # @return [Dry::Monads::Failure(:expired, String, String, Exception)]
-    # @return [Dry::Monads::Failure(:decoding_failed, String, String, Exception)]
+    # @return [Dry::Monads::Failure(:decoding_failed, String, Exception)]
     def call(env)
       return Success[:skipped] if yield skip_authentication.call(env)
 
@@ -71,45 +69,11 @@ module KeycloakRack
 
       return Success[:unauthenticated] if token.blank?
 
-      decoded_token = yield decode_and_verify token
+      payload, headers = yield decode_and_verify.call token
+
+      decoded_token = yield wrap.call payload, headers
 
       Success[:authenticated, decoded_token]
-    end
-
-    private
-
-    # @param [String] token
-    # @return [Dry::Monads::Success(KeycloakRack::DecodedToken)]
-    # @return [Dry::Monads::Failure(:expired, String, String, Exception)]
-    # @return [Dry::Monads::Failure(:decoding_failed, String, String, Exception)]
-    def decode_and_verify(token)
-      jwks = yield key_resolver.find_public_keys
-
-      algorithms = yield algorithms_for jwks
-
-      options = {
-        algorithms: algorithms,
-        leeway: token_leeway,
-        jwks: jwks
-      }
-
-      payload, headers = JWT.decode token, nil, true, options
-    rescue JWT::ExpiredSignature => e
-      Failure[:expired, "JWT is expired", token, e]
-    rescue JWT::DecodeError => e
-      Failure[:decoding_failed, "Failed to decode JWT", token, e]
-    else
-      Success DecodedToken.new payload.merge(original_payload: payload, headers: headers)
-    end
-
-    # @param [{ Symbol => <{ Symbol => String }> }] jwks
-    # @return [<String>]
-    def algorithms_for(jwks)
-      jwks.fetch(:keys, []).map do |k|
-        k[:alg]
-      end.uniq.compact.then do |algs|
-        algs.present? ? Success(algs) : Failure[:no_algorithms, "Could not derive algorithms from JWKS"]
-      end
     end
   end
 end

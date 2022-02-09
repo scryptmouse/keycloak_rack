@@ -19,6 +19,10 @@ module KeycloakRack
         KeycloakRack::Authenticate.new
       end
 
+      register :decode_and_verify do
+        KeycloakRack::DecodeAndVerify.new
+      end
+
       register :http_client do
         KeycloakRack::HTTPClient.new
       end
@@ -47,6 +51,10 @@ module KeycloakRack
 
       register :x509_store do
         resolve(:config).build_x509_store
+      end
+
+      register :wrap_token do
+        KeycloakRack::WrapToken.new
       end
     end
   end

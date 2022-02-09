@@ -18,6 +18,8 @@ module KeycloakRack
 
     private_constant :KEY_MAP
 
+    ALIAS_MAP = KEY_MAP.invert.freeze
+
     transform_keys do |k|
       KEY_MAP[k] || k.to_sym
     end
@@ -187,5 +189,13 @@ module KeycloakRack
     # An error raised by {KeycloakRack::DecodedToken#fetch} when
     # trying to fetch something the token doesn't know about
     class UnknownAttribute < KeyError; end
+
+    class << self
+      # @param [Symbol] key
+      # @return [Symbol]
+      def maybe_unalias_key(key)
+        ALIAS_MAP.fetch(key, key).to_sym
+      end
+    end
   end
 end

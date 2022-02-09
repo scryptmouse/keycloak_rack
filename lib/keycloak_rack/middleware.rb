@@ -84,7 +84,7 @@ module KeycloakRack
         401
       in Failure[:expired, String, String, Exception]
         403
-      in Failure[Symbol, String, String, Exception]
+      in Failure[Symbol, String, Exception]
         400
       else
         500
