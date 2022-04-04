@@ -16,6 +16,8 @@ module KeycloakRack
       "typ" => :type,
     }.with_indifferent_access.freeze
 
+    Audience = Types::Coercible::Array.of(Types::String)
+
     private_constant :KEY_MAP
 
     ALIAS_MAP = KEY_MAP.invert.freeze
@@ -85,7 +87,7 @@ module KeycloakRack
 
     # @!attribute [r] audience
     # @return [String]
-    attribute :audience, Types::String
+    attribute :audience, Audience.optional
 
     # @!attribute [r] type
     # The `typ` claim in the JWT. Keycloak sets this to `"JWT"`.
