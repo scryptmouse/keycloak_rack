@@ -10,7 +10,7 @@ module KeycloakRack
     include Import[config: "keycloak-rack.config"]
 
     # The pattern to match bearer tokens with.
-    BEARER_TOKEN = /\ABearer (?<token>.+)\z/i.freeze
+    BEARER_TOKEN = /\ABearer (?<token>.+)\z/i
 
     # @param [Hash, #[]] env
     # @return [Dry::Monads::Success(String)] when a token is found

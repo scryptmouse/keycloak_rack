@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
-appraise "rack_only" do
+appraise "rack_2" do
+  gem "rack", ">= 2.2", "< 3"
+end
+
+appraise "rack_3" do
+  gem "rack", ">= 3", "< 4"
 end
 
 appraise "rails_6_0" do

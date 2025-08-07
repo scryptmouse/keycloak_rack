@@ -15,13 +15,8 @@ gem "keycloak_rack", "1.0.0"
 
 ### Ruby & Rails Versions
 
-- Ruby 2.7, 3.0
-- Rails 6.0, 6.1, or using only Rack 2.2
-
-It has also been tested on Rails 5.2, but isn't officially supported because it doesn't support Ruby 3.
-
-At minimum, it requires Ruby 2.7, because it makes use of [pattern matching](https://docs.ruby-lang.org/en/3.0.0/doc/syntax/pattern_matching_rdoc.html).
-If you find the warning at boot annoying (I sure do), you can set `RUBYOPT='-W:no-experimental'` in your environment to silence the nag.
+- Ruby 3.0+
+- Rails 6.0, 6.1, 7.0, 7.1, or using only Rack 2.2+ or 3.x
 
 ## Basic Usage in Rails
 
