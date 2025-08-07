@@ -12,7 +12,9 @@ require "anyway/testing/helpers"
 require "dry/container/stub"
 require "factory_bot"
 require "faker"
+require "logger"
 require "pry"
+require "rack/builder"
 require "rack/test"
 require "rspec/json_expectations"
 require "timecop"
@@ -27,7 +29,7 @@ end
 
 require "keycloak_rack"
 
-Dir[File.join(__dir__, "support/**/*.rb")].sort.each { |f| require f }
+Dir[File.join(__dir__, "support/**/*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   config.include Anyway::Testing::Helpers

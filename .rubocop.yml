@@ -7,7 +7,7 @@ AllCops:
     - Appraisals
     - "bin/*"
     - "gemfiles/**/*"
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
 
 Bundler/OrderedGems:
   Enabled: false
@@ -172,6 +172,9 @@ Style/IfWithBooleanLiteralBranches:
   Enabled: true
 
 Style/Lambda:
+  Enabled: false
+
+Style/LambdaCall:
   Enabled: false
 
 Style/MultilineBlockChain:

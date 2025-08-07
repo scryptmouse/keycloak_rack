@@ -15,22 +15,21 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     env:
-      APPRAISAL_NAME: rack_only
-      BUNDLE_GEMFILE: ./gemfiles/rack_only.gemfile
+      APPRAISAL_NAME: rack_3
+      BUNDLE_GEMFILE: ./gemfiles/rack_3.gemfile
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
-      - uses: actions/cache@v2
+          ruby-version: 3.0.0
+      - uses: actions/cache@v4
         with:
           path: vendor/bundle
-          key: bundle-use-ruby-ubuntu-latest-2.7-rack_only-${{ hashFiles(format('{0}.lock', env.BUNDLE_GEMFILE)) }}
+          key: bundle-use-ruby-ubuntu-latest-3.0.0-rack_3-${{ hashFiles(format('{0}.lock', env.BUNDLE_GEMFILE)) }}
           restore-keys: |
-            bundle-use-ruby-ubuntu-latest-2.7-rack_only
+            bundle-use-ruby-ubuntu-latest-3.0.0-rack_3
       - name: bundle install
         run: |
-          gem update --system
           bundle config deployment true
           bundle config path vendor/bundle
           bundle install --jobs 4
@@ -42,8 +41,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        appraisal_name: [rack_only, rails_6_0, rails_6_1]
-        ruby: [2.7.5, 3.0.0]
+        appraisal_name: [rack_2, rack_3, rails_6_0, rails_6_1]
+        ruby: [3.0.0]
     env:
       APPRAISAL_NAME: ${{ matrix.appraisal_name }}
       BUNDLE_GEMFILE: ${{ format('./gemfiles/{0}.gemfile', matrix.appraisal_name) }}
@@ -52,7 +51,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: bundle-use-ruby-ubuntu-latest-${{ matrix.ruby }}-${{ env.APPRAISAL_NAME }}-${{ hashFiles(format('{0}.lock', env.BUNDLE_GEMFILE)) }}
@@ -60,7 +59,6 @@ jobs:
             bundle-use-ruby-ubuntu-latest-${{ matrix.ruby }}-${{ env.APPRAISAL_NAME }}
       - name: bundle install
         run: |
-          gem update --system
           bundle config deployment true
           bundle config path vendor/bundle
           bundle install --jobs 4
