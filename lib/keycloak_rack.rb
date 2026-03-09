@@ -10,6 +10,7 @@ require "active_support/all"
 
 require "anyway_config"
 require "dry/auto_inject"
+require "dry/configurable"
 require "dry/container"
 require "dry/effects"
 require "dry/initializer"
@@ -36,20 +37,60 @@ loader.setup
 
 # Authorize [Keycloak](https://www.keycloak.org) tokens via {KeycloakRack::Middleware rack middleware}.
 module KeycloakRack
-  class << self
-    include KeycloakRack::WithConfig
+  extend Dry::Configurable
 
-    # Configure the gem manually.
-    #
-    # @note Changes using this format will _overwrite_ values inherited from ENV or config files.
-    # @yield [config] configure the gem
-    # @yieldparam [KeycloakRack::Config] config
-    # @yieldreturn [void]
+  DEFAULT_X509_STORE = OpenSSL::X509::Store.new.tap do |store|
+    store.set_default_paths
+  end.freeze
+
+  setting :server_url
+
+  setting :realm_id
+
+  setting :ca_certificate_file
+
+  setting :skip_paths, default: KeycloakRack::SkipPaths.new, constructor: ->(value) { KeycloakRack::SkipPaths.(value) }
+
+  setting :token_leeway, default: 10, constructor: ->(value) { value.to_i }
+
+  setting :cache_ttl, default: 86_400, constructor: ->(value) { value.to_i }
+
+  setting :halt_on_auth_failure, default: true
+
+  setting :allow_anonymous, default: false
+
+  setting :x509_store, default: DEFAULT_X509_STORE
+
+  class << self
+    def _config
+      @_config ||= Config.new
+    end
+
+    def configure(...)
+      super
+    ensure
+      _config.inherit_from_global_config!
+    end
+
     # @return [void]
-    def configure
-      yield config
+    def apply_global_config!
+      _config.apply_to_global_config!
+    end
+
+    # @api private
+    # @note Used in testing.
+    # @return [void]
+    def refresh_config!
+      @_config = Config.new
+
+      apply_global_config!
     end
   end
+
+  # Inherit from the environment / config.
+  # :nocov:
+  apply_global_config! unless defined?(Rails)
+  # :nocov:
 end
 
 loader.eager_load

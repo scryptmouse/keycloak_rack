@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
-RSpec.describe KeycloakRack::SkipAuthentication do
+RSpec.describe KeycloakRack::SkipPaths do
   include Rack::Test::Methods
+
   include_context "with mocked keycloak"
 
-  before do
-    KeycloakRack.configure do |c|
-      c.skip_paths = {
-        get: ["/ping"],
-        post: [%r{\A/foo.+bar}]
-      }
-    end
+  let(:paths) do
+    {
+      get: ["/ping"],
+      post: [%r{\A/foo.+bar}],
+    }
   end
 
-  let(:skipper) { described_class.new }
+  let(:skipper) { described_class.new(paths) }
 
   let(:app) do
     ->(env) do

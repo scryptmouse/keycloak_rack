@@ -12,11 +12,12 @@ module KeycloakRack
   class Middleware
     include Dry::Monads[:result]
 
-    include Import[authenticate: "keycloak-rack.authenticate", config: "keycloak-rack.config"]
+    # @return [KeycloakRack::Authenticate]
+    attr_reader :authenticate
 
     # @param [#call] app the next component in the rack middleware stack
-    def initialize(app, **options)
-      super(**options)
+    def initialize(app)
+      @authenticate = KeycloakRack::Authenticate.new
 
       @app = app
     end
@@ -123,10 +124,6 @@ module KeycloakRack
     end
 
     # @param [Dry::Monads::Result] result
-    def halt?(result)
-      return false unless result.failure?
-
-      config.halt_on_auth_failure?
-    end
+    def halt?(result) = result.failure? && KeycloakRack.config.halt_on_auth_failure
   end
 end

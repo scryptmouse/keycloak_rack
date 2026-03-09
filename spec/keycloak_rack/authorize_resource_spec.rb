@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe KeycloakRack::AuthorizeResource do
-  let(:session) { FactoryBot.create :session }
+  let(:session) { FactoryBot.create(:session) }
 
   let(:instance) { session.authorize_resource }
 

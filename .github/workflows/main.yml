@@ -15,34 +15,34 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     env:
+      RUBY_VERSION: ruby-4.0.1
+      RUBOCOP_CACHE_ROOT: tmp/rubocop
       APPRAISAL_NAME: rack_3
       BUNDLE_GEMFILE: ./gemfiles/rack_3.gemfile
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.0.0
-      - uses: actions/cache@v4
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+      - uses: actions/cache@v5
+        env:
+          DEPENDENCIES_HASH: ${{ hashFiles('.rubocop.yml', '.rubocop_todo.yml', format('{0}.lock', env.BUNDLE_GEMFILE)) }}
         with:
-          path: vendor/bundle
-          key: bundle-use-ruby-ubuntu-latest-3.0.0-rack_3-${{ hashFiles(format('{0}.lock', env.BUNDLE_GEMFILE)) }}
+          path: ${{ env.RUBOCOP_CACHE_ROOT }}
+          key: rubocop-${{ runner.os }}-${{ env.RUBY_VERSION }}-${{ env.DEPENDENCIES_HASH }}-${{ github.ref_name == github.event.repository.default_branch && github.run_id || 'default' }}
           restore-keys: |
-            bundle-use-ruby-ubuntu-latest-3.0.0-rack_3
-      - name: bundle install
-        run: |
-          bundle config deployment true
-          bundle config path vendor/bundle
-          bundle install --jobs 4
+            rubocop-${{ runner.os }}-${{ env.RUBY_VERSION }}-${{ env.DEPENDENCIES_HASH }}-
       - name: "Run rubocop"
         run: |
-          bin/rubocop
+          bin/rubocop -f github
   rspec:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        appraisal_name: [rack_2, rack_3, rails_6_0, rails_6_1]
-        ruby: [3.0.0]
+        appraisal_name: [jwt_2, jwt_3, rack_2, rack_3, rails_7_1, rails_7_2, rails_8_0, rails_8_1]
+        ruby: [3.4.7, 4.0.1]
     env:
       APPRAISAL_NAME: ${{ matrix.appraisal_name }}
       BUNDLE_GEMFILE: ${{ format('./gemfiles/{0}.gemfile', matrix.appraisal_name) }}
@@ -51,17 +51,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - uses: actions/cache@v4
-        with:
-          path: vendor/bundle
-          key: bundle-use-ruby-ubuntu-latest-${{ matrix.ruby }}-${{ env.APPRAISAL_NAME }}-${{ hashFiles(format('{0}.lock', env.BUNDLE_GEMFILE)) }}
-          restore-keys: |
-            bundle-use-ruby-ubuntu-latest-${{ matrix.ruby }}-${{ env.APPRAISAL_NAME }}
-      - name: bundle install
-        run: |
-          bundle config deployment true
-          bundle config path vendor/bundle
-          bundle install --jobs 4
+          bundler-cache: true
       - name: "Run RSpec"
         run: |
           bin/rspec

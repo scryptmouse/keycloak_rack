@@ -2,6 +2,7 @@
 
 source "https://rubygems.org"
 
-gem "rack", ">= 3", "< 4"
+gem "rails", ">= 7.2.0", "< 8.0.0"
+gem "rspec-rails", "5.0.1"
 
 gemspec :path => "../"

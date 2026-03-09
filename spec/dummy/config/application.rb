@@ -27,14 +27,20 @@ module Dummy
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
 
-    case ENV["BUNDLE_GEMFILE"]
-    when /rails_6_0/
-      config.load_defaults 6.0
-      config.hosts << "www.example.com"
-    when /rails_6_1/
-      config.load_defaults 6.1
-      config.hosts << "www.example.com"
+    config.hosts << "www.example.com"
+
+    # :nocov:
+    case ENV.fetch("BUNDLE_GEMFILE", nil)
+    when /rails_7_1/
+      config.load_defaults 7.1
+    when /rails_7_2/
+      config.load_defaults 7.2
+    when /rails_8_0/
+      config.load_defaults 8.0
+    when /rails_8_1/
+      config.load_defaults 8.1
     end
+    # :nocov:
 
     # Configuration for the application, engines, and railties goes here.
     #

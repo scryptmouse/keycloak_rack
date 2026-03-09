@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :session, class: "KeycloakRack::Session" do
-    token { FactoryBot.create :decoded_token }
+    token { FactoryBot.create(:decoded_token) }
     skipped { false }
     auth_result { Dry::Monads.Success token }
 

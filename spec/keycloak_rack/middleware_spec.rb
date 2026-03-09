@@ -86,7 +86,7 @@ RSpec.describe KeycloakRack::Middleware do
 
       expect(last_response).to be_ok
 
-      expect(last_rack_environment).to include_json(expected_partial_rack_environment)
+      expect(last_rack_environment).to include(expected_partial_rack_environment)
     end
 
     it "fails when expired" do
