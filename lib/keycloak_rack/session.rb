@@ -19,26 +19,16 @@ module KeycloakRack
     alias skipped? skipped
 
     # @return [Dry::Monads::Result]
-    def authenticate!
-      auth_result
-    end
+    def authenticate! = auth_result
 
     # @return [Dry::Monads::Result]
-    def authorize_realm!(*args)
-      authorize_realm.call(*args)
-    end
+    def authorize_realm!(...) = authorize_realm.call(...)
 
     # @return [Dry::Monads::Result]
-    def authorize_resource!(*args)
-      authorize_resource.call(*args)
-    end
+    def authorize_resource!(...) = authorize_resource.call(...)
 
-    def authenticated?
-      auth_result.success? && token.present?
-    end
+    def authenticated? = auth_result.success? && token.present?
 
-    def anonymous?
-      auth_result.success? && token.blank?
-    end
+    def anonymous? = auth_result.success? && token.blank?
   end
 end

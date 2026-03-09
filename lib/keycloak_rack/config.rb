@@ -55,19 +55,7 @@ module KeycloakRack
     # @return [Boolean]
     attr_config allow_anonymous: false
 
-    # required :server_url, :realm_id
-
-    def cache_ttl=(value)
-      super Types::Coercible::Integer[value]
-    end
-
-    def skip_paths=(value)
-      super Types::SkipPaths[value]
-    end
-
-    def token_leeway=(value)
-      super Types::Coercible::Integer[value]
-    end
+    coerce_types cache_ttl: :integer, token_leeway: :integer, skip_paths: KeycloakRack::SkipPaths
 
     # @api private
     # @!visibility private
@@ -79,6 +67,30 @@ module KeycloakRack
         store.add_file(ca_certificate_file) if ca_certificate_file.present?
       end
       # :nocov:
+    end
+
+    # @return [void]
+    def apply_to_global_config!
+      KeycloakRack.config.server_url = server_url
+      KeycloakRack.config.realm_id = realm_id
+      KeycloakRack.config.ca_certificate_file = ca_certificate_file
+      KeycloakRack.config.skip_paths = skip_paths
+      KeycloakRack.config.token_leeway = token_leeway
+      KeycloakRack.config.cache_ttl = cache_ttl
+      KeycloakRack.config.halt_on_auth_failure = halt_on_auth_failure
+      KeycloakRack.config.allow_anonymous = allow_anonymous
+      KeycloakRack.config.x509_store = build_x509_store
+    end
+
+    def inherit_from_global_config!
+      self.server_url = KeycloakRack.config.server_url
+      self.realm_id = KeycloakRack.config.realm_id
+      self.ca_certificate_file = KeycloakRack.config.ca_certificate_file
+      self.skip_paths = KeycloakRack.config.skip_paths
+      self.token_leeway = KeycloakRack.config.token_leeway
+      self.cache_ttl = KeycloakRack.config.cache_ttl
+      self.halt_on_auth_failure = KeycloakRack.config.halt_on_auth_failure
+      self.allow_anonymous = KeycloakRack.config.allow_anonymous
     end
   end
 end

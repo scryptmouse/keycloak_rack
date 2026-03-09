@@ -10,5 +10,9 @@ module KeycloakRack
     initializer("keycloak_rack.insert_middleware") do |app|
       app.config.middleware.use(KeycloakRack::Middleware)
     end
+
+    initializer("keycloak_rack.configure") do
+      KeycloakRack.apply_global_config!
+    end
   end
 end

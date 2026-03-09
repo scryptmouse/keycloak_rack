@@ -39,16 +39,12 @@ RSpec.shared_context "with mocked keycloak" do
 
       mocked_config.skip_paths = config_skip_paths
 
-      KeycloakRack::Container.stub("keycloak-rack.config", mocked_config)
-
-      resolver = KeycloakRack::KeyResolver.new
-
-      KeycloakRack::Container.stub("keycloak-rack.key_resolver", resolver)
+      mocked_config.apply_to_global_config!
 
       example.run
+    ensure
+      KeycloakRack.refresh_config!
     end
-  ensure
-    KeycloakRack::Container.unstub("keycloak-rack.config")
   end
 
   before do

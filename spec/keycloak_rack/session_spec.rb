@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe KeycloakRack::Session do
-  let(:session) { FactoryBot.create :session }
+  let(:session) { FactoryBot.create(:session) }
 
   subject { session }
 
@@ -20,7 +20,7 @@ RSpec.describe KeycloakRack::Session do
   end
 
   context "with an anonymous session" do
-    let(:session) { FactoryBot.create :session, :anonymous }
+    let(:session) { FactoryBot.create(:session, :anonymous) }
 
     it { is_expected.to be_anonymous }
 

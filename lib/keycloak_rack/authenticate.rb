@@ -51,10 +51,13 @@ module KeycloakRack
 
     include Import[
       decode_and_verify: "keycloak-rack.decode_and_verify",
-      read_token: "keycloak-rack.read_token",
-      skip_authentication: "keycloak-rack.skip_authentication",
       wrap: "keycloak-rack.wrap_token",
     ]
+
+    # The pattern to match bearer tokens with.
+    BEARER_TOKEN = /\ABearer (?<token>.+)\z/i
+
+    delegate :skip?, to: :skip_paths
 
     # @param [Hash] env the rack environment
     # @return [Dry::Monads::Success(:authenticated, KeycloakRack::DecodedToken)]
@@ -63,9 +66,9 @@ module KeycloakRack
     # @return [Dry::Monads::Failure(:expired, String, String, Exception)]
     # @return [Dry::Monads::Failure(:decoding_failed, String, Exception)]
     def call(env)
-      return Success[:skipped] if yield skip_authentication.call(env)
+      return Success[:skipped] if skip?(env)
 
-      token = yield read_token.call env
+      token = yield read_token(env)
 
       return Success[:unauthenticated] if token.blank?
 
@@ -74,6 +77,35 @@ module KeycloakRack
       decoded_token = yield wrap.call payload, headers
 
       Success[:authenticated, decoded_token]
+    end
+
+    # @!attribute [r] skip_paths
+    # @see KeycloakRack::SkipPaths#skip?
+    def skip?(env) = KeycloakRack.config.skip_paths.skip?(env)
+
+    private
+
+    # @param [Hash, #[]] env
+    # @return [Dry::Monads::Success(String)] when a token is found
+    # @return [Dry::Monads::Success(nil)] when a token is not found, but unauthenticated requests are allowed
+    # @return [Dry::Monads::Failure(:no_token, String)]
+    def read_token(env)
+      found_token = read_from env
+
+      return Success(found_token) if found_token.present?
+
+      return Success(nil) if KeycloakRack.config.allow_anonymous
+
+      Failure[:no_token, "No JWT provided"]
+    end
+
+    # @param [Hash] env the rack environment
+    # @option env [String] "HTTP_AUTHORIZATION" the Authorization header
+    # @return [String, nil]
+    def read_from(env)
+      match = BEARER_TOKEN.match env["HTTP_AUTHORIZATION"]
+
+      match&.[](:token)
     end
   end
 end

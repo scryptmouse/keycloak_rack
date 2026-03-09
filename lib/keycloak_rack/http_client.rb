@@ -6,8 +6,6 @@ module KeycloakRack
   class HTTPClient
     include Dry::Monads[:do, :result]
 
-    include Import[config: "keycloak-rack.config", server_url: "keycloak-rack.server_url", x509_store: "keycloak-rack.x509_store"]
-
     # @param [String] realm_id
     # @param [String] path
     # @return [Dry::Monads::Success(Net::HTTPSuccess)] on a successful request
@@ -82,5 +80,13 @@ module KeycloakRack
     rescue JSON::ParserError => e
       Failure[:invalid_response, "Response was not valid JSON: #{e.message}", response]
     end
+
+    # @!attribute [r] server_url
+    # @return [String]
+    def server_url = KeycloakRack.config.server_url
+
+    # @!attribute [r] x509_store
+    # @return [OpenSSL::X509::Store]
+    def x509_store = KeycloakRack.config.x509_store
   end
 end

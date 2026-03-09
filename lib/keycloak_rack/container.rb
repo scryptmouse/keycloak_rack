@@ -9,51 +9,23 @@ module KeycloakRack
     extend Dry::Container::Mixin
 
     namespace "keycloak-rack" do
-      register :config do
-        # :nocov:
-        KeycloakRack::Config.new
-        # :nocov:
-      end
-
-      register :authenticate do
+      register :authenticate, memoize: true do
         KeycloakRack::Authenticate.new
       end
 
-      register :decode_and_verify do
+      register :decode_and_verify, memoize: true do
         KeycloakRack::DecodeAndVerify.new
       end
 
-      register :http_client do
+      register :http_client, memoize: true do
         KeycloakRack::HTTPClient.new
       end
 
-      register :key_fetcher do
-        KeycloakRack::KeyFetcher.new
-      end
-
       register :key_resolver, memoize: true do
-        # :nocov:
         KeycloakRack::KeyResolver.new
-        # :nocov:
       end
 
-      register :read_token do
-        KeycloakRack::ReadToken.new
-      end
-
-      register :server_url do
-        resolve(:config).server_url
-      end
-
-      register :skip_authentication do
-        KeycloakRack::SkipAuthentication.new
-      end
-
-      register :x509_store do
-        resolve(:config).build_x509_store
-      end
-
-      register :wrap_token do
+      register :wrap_token, memoize: true do
         KeycloakRack::WrapToken.new
       end
     end

@@ -9,19 +9,17 @@ SimpleCov.start do
 end
 
 require "anyway/testing/helpers"
-require "dry/container/stub"
 require "factory_bot"
 require "faker"
 require "logger"
 require "pry"
 require "rack/builder"
 require "rack/test"
-require "rspec/json_expectations"
 require "timecop"
 require "webmock/rspec"
 
 begin
-  require_relative "./dummy/config/environment"
+  require_relative "dummy/config/environment"
   require "rspec/rails"
 rescue LoadError
   # For appraisals with rails
@@ -37,7 +35,6 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     FactoryBot.find_definitions
-    KeycloakRack::Container.enable_stubs!
     WebMock.disable_net_connect!
   end
 

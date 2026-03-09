@@ -1,19 +1,30 @@
-require:
+plugins:
+  - rubocop-factory_bot
   - rubocop-rake
   - rubocop-rspec
 
 AllCops:
+  NewCops: enable
   Exclude:
     - Appraisals
     - "bin/*"
     - "gemfiles/**/*"
-  TargetRubyVersion: 3.0
+    - "vendor/**/*"
+  TargetRubyVersion: 3.4
 
 Bundler/OrderedGems:
   Enabled: false
 
-Gemspec/DateAssignment:
+# Explicit is better.
+FactoryBot/SyntaxMethods:
+  Enabled: false
+
+Gemspec/DeprecatedAttributeAssignment:
   Enabled: true
+
+# We use appraisals.
+Gemspec/DevelopmentDependencies:
+  Enabled: false
 
 Layout/ArgumentAlignment:
   Enabled: false
@@ -98,7 +109,7 @@ Lint/UnusedMethodArgument:
   Enabled: false
 
 Metrics/AbcSize:
-  Max: 25
+  Max: 30
 
 # This doesn't work with anything that uses a DSL
 Metrics/BlockLength:
@@ -113,7 +124,7 @@ Metrics/MethodLength:
 Naming/MethodName:
   Enabled: false
 
-Naming/PredicateName:
+Naming/PredicatePrefix:
   ForbiddenPrefixes:
     - is_
 
@@ -124,6 +135,9 @@ RSpec/DescribeClass:
   Enabled: false
 
 RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/ExampleWording:
   Enabled: false
 
 RSpec/LeadingSubject:

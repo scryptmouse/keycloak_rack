@@ -36,7 +36,7 @@ RSpec.describe "Rails integration" do
 
         expect(response).to be_ok
 
-        expect(response.body).to include_json keycloak_id: a_kind_of(String)
+        expect(JSON.parse(response.body)).to include("keycloak_id" => a_kind_of(String))
       end
     end
   end

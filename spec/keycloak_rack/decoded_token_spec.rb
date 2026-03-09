@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe KeycloakRack::DecodedToken do
-  let(:instance) { FactoryBot.create :decoded_token }
+  let(:instance) { FactoryBot.create(:decoded_token) }
 
   describe "#fetch" do
     it "can fetch aliases" do
@@ -15,11 +15,11 @@ RSpec.describe KeycloakRack::DecodedToken do
 
   describe "#slice" do
     it "can slice attributes and aliases" do
-      expect(instance.slice(:email, :first_name)).to include_json(email: instance.email, first_name: instance.given_name)
+      expect(instance.slice(:email, :first_name)).to include(email: instance.email, first_name: instance.given_name)
     end
 
     it "can slice custom attributes" do
-      expect(instance.slice(:custom_attribute)).to include_json(custom_attribute: a_kind_of(String))
+      expect(instance.slice(:custom_attribute)).to include(custom_attribute: a_kind_of(String))
     end
 
     it "raises an error when trying to slice an unknown attribute" do

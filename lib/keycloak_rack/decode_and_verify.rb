@@ -6,11 +6,8 @@ module KeycloakRack
     include Dry::Monads[:do, :result]
 
     include Import[
-      config: "keycloak-rack.config",
       key_resolver: "keycloak-rack.key_resolver",
     ]
-
-    delegate :token_leeway, to: :config
 
     # @param [String] token
     # @return [Dry::Monads::Success(Hash, Hash)] a tuple of the JWT payload and its headers
@@ -35,6 +32,8 @@ module KeycloakRack
     else
       Success[payload, headers]
     end
+
+    def token_leeway = KeycloakRack.config.token_leeway
 
     private
 
